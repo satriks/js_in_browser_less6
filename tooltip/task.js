@@ -1,31 +1,42 @@
 (function () {
+    document.addEventListener('DOMContentLoaded', addTooltip)
+    const tooltips = document.querySelectorAll('.has-tooltip')
+    tooltips.forEach(el => el.addEventListener('click', tooltip))
+    const tipPossition = 'bottom'
 
-    const toltips = document.querySelectorAll('.has-tooltip')
-    toltips.forEach(el => el.addEventListener('click', toltip))
-    const tipPossition = 'button'
-
-    function toltip(event) {
+    function tooltip(event) {
         event.preventDefault();
 
-        let data = {
-            top: this.offsetTop,
-            left: this.offsetLeft,
-            right: this.offsetRight,
-            width: this.offsetWidth,
-            height: this.offsetHeight,
-            text: this.title
-        
+        if (!checkActiv(this)){
+            tooltips.forEach( el => checkActiv(el))
+            
+            this.nextElementSibling.classList.add('tooltip_active')
         }
+    }
 
-        toltips.forEach(el => {
-            if (el.children.length > 0) {
-                el.removeChild(el.firstChild)
+    function checkActiv(el) {
+        if (Array.from(el.nextElementSibling.classList).includes('tooltip_active')){
+            el.nextElementSibling.classList.remove('tooltip_active')
+            return true
+        }     
+    }
+    
+    function addTooltip(event) {
+        tooltips.forEach(el => {
+            let data = {
+                top: el.offsetTop,
+                left: el.offsetLeft,
+                right: el.offsetRight,
+                width: el.offsetWidth,
+                height: el.offsetHeight,
+                text: el.title
+            
             }
-        })
-
-        let addElement = getTooltip(data)
-        this.prepend(addElement)
-        setPosition(addElement, data)
+            let addElement = getTooltip(data)
+            el.insertAdjacentElement('afterend' , addElement)
+            setPosition(addElement, data)
+            })
+        
     }
 
     function getTooltip(data) {
@@ -33,7 +44,6 @@
         tool = document.createElement('div')
 
         tool.classList.add("tooltip")
-        tool.classList.add("tooltip_active")
 
         tool.innerText= data.text
 
@@ -53,13 +63,13 @@
             case 'top': 
                 element.style.top = `${data.top - data.height - 10}px`
                 break;
-            case 'button': 
+            case 'bottom': 
                 element.style.top = `${data.top + data.height}px`
                 break;
             case 'left': 
                 element.style.left = `${data.left - element.offsetWidth}px`
                 break;
-            case 'rigth': 
+            case 'right': 
                 element.style.left = `${data.left + data.width}px`
                 break;
         } 
