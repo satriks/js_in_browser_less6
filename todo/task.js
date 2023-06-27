@@ -1,27 +1,16 @@
 (function () {
 
-document.addEventListener('DOMContentLoaded', printTask)    
+document.addEventListener('DOMContentLoaded', printTaskFromStorage)    
 const taskText = document.querySelector('.tasks__input')
 document.getElementById("tasks__add").addEventListener('click', addTask)
 taskText.addEventListener('keydown', addTask)
 
 function addTask(event) {
 
-    if ((event.key == 'Enter' || this.id == 'tasks__add') && taskText.value) {
+    if ((event.key == 'Enter' || this.id == 'tasks__add') && taskText.value.trim()) {
         event.preventDefault()
-        
-        const taskList = document.querySelector('.tasks__list')
-        const task = document.createElement('div')
-        task.innerHTML = `<div class="task">
-                            <div class="task__title">
-                                ${taskText.value}
-                            </div>
-                            <a href="#" class="task__remove">&times;</a>
-                        </div>`
-        taskList.append(task)
         saveToStorage(taskText.value)
-        taskText.value = ''
-        task.querySelector('.task__remove').addEventListener('click', (event) => close(event, task))
+        printTask(taskText.value)
     }
 }
 
@@ -41,15 +30,15 @@ function saveToStorage(task) {
     localStorage.setItem('tasks', JSON.stringify([...tasks, task]))
 }
 
-function printTask() {
+function printTaskFromStorage() {
     const taskFromStorage = JSON.parse(localStorage.getItem('tasks'))
 
     if (taskFromStorage) {
-        taskFromStorage.forEach(element => printTaskFromStorage(element));
+        taskFromStorage.forEach(element => printTask(element));
     }
 }
 
-function printTaskFromStorage(element) {
+function printTask(element) {
 
     const taskList = document.querySelector('.tasks__list')
     const task = document.createElement('div')
