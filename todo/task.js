@@ -3,12 +3,12 @@
 document.addEventListener('DOMContentLoaded', printTaskFromStorage)    
 const taskText = document.querySelector('.tasks__input')
 document.getElementById("tasks__add").addEventListener('click', addTask)
-taskText.addEventListener('keydown', addTask)
+// taskText.addEventListener('keydown', addTask)
 
 function addTask(event) {
+    event.preventDefault()
 
-    if ((event.key == 'Enter' || this.id == 'tasks__add') && taskText.value.trim()) {
-        event.preventDefault()
+    if ( taskText.value.trim()) {
         saveToStorage(taskText.value)
         printTask(taskText.value)
     }
